@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { postImage } from '../../utils/postImages.js';
 const posts=(await getCollection('posts',({data})=>!data.draft && Boolean(data.sourceUrl))).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 ---
-<BaseLayout title="Substack Posts" description="All The Unlearned Investor Substack articles, latest first."><div class="eyebrow">Writing archive</div><h1>Substack Posts</h1><p class="muted">{posts.length} posts</p><div class="post-list">{posts.map(post=><a class="post-preview" href={'/substack-posts/'+post.slug+'/'}>{postImage(post) && <img src={postImage(post)} alt={post.data.title} loading="lazy" style="width:100%;max-height:310px;object-fit:cover;border-radius:8px;margin-bottom:15px"/>}<span class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span><h2>{post.data.title}</h2><p>{post.data.description || 'Read the full article.'}</p><span class="read-more">Read article →</span></a>)}</div></BaseLayout>
+<BaseLayout title="Substack Posts" description="All The Unlearned Investor Substack articles, latest first."><div class="eyebrow">Writing archive</div><h1>Substack Posts</h1><p class="muted">{posts.length} posts</p><div class="post-list">{posts.map(post=><a class="post-preview" href={'/substack-posts/'+post.slug+'/'}><span class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span><h2>{post.data.title}</h2><p>{post.data.description || 'Read the full article.'}</p><span class="read-more">Read article →</span></a>)}</div></BaseLayout>
