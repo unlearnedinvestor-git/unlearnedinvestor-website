@@ -1,0 +1,16 @@
+{
+  "name": "unlearnedinvestor-website",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "import:substack": "node scripts/import-substack.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.15.0",
+    "@astrojs/sitemap": "^3.6.0",
+    "rss-parser": "^3.13.0"
+  }
+}

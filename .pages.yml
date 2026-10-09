@@ -1,0 +1,32 @@
+media:
+  input: public/media
+  output: /media
+content:
+  - name: posts
+    label: Articles
+    type: collection
+    path: src/content/posts
+    filename: '{primary}.md'
+    view:
+      fields: [title, pubDate, category, draft]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+      - name: pubDate
+        label: Publication date
+        type: date
+        required: true
+      - name: category
+        label: Category
+        type: string
+      - name: draft
+        label: Draft
+        type: boolean
+      - name: body
+        label: Body
+        type: rich-text
