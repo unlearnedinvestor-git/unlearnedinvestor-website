@@ -51,7 +51,7 @@ async function pageCover(link) {
 await fs.mkdir(out, { recursive: true });
 let feed;
 try { feed = await parser.parseURL(feedUrl); }
-catch (e) { console.error('Substack feed unavailable:', e.message); process.exitCode = 1; }
+catch (e) { console.warn('Substack feed unavailable; deploying existing articles:', e.message); }
 if (feed) {
   const byUrl = new Map((feed.items || []).filter(i => i.link).map(i => [i.link.replace(/\/$/, ''), i]));
   let imported = 0, recovered = 0, missing = 0;
