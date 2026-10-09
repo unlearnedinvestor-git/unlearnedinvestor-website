@@ -1,1 +1,1 @@
-export function GET(){return new Response('User-agent: *\nAllow: /\nSitemap: https://unlearnedinvestor-git.github.io/unlearnedinvestor-website/sitemap-index.xml\n',{headers:{'Content-Type':'text/plain'}});}
+export function GET(){return new Response('User-agent: *\nAllow: /\nSitemap: https://unlearnedinvestor.com/sitemap-index.xml\n',{headers:{'Content-Type':'text/plain'}});}
