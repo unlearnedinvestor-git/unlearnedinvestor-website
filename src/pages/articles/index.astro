@@ -1,11 +1,6 @@
 ---
-const siteBase = '/';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 const posts=(await getCollection('posts',({data})=>!data.draft && !data.sourceUrl)).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 ---
-<BaseLayout title="Articles" description="Original articles published on The Unlearned Investor website.">
-  <div class="eyebrow">Website originals</div><h1>Articles</h1>
-  <p class="lead">Original writing published directly on this website.</p>
-  {posts.length ? <div class="cards">{posts.map(post=><a class="card" href={siteBase + 'articles/' + post.slug + '/'}><div class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div><h3>{post.data.title}</h3><p>{post.data.description}</p></a>)}</div> : <p>Original website articles will appear here. In the meantime, explore <a href={siteBase + 'my-substack-posts/'}>My Substack Posts</a>.</p>}
-</BaseLayout>
+<BaseLayout title="Original Articles" description="Original articles published on The Unlearned Investor website."><div class="eyebrow">Website originals</div><h1>Original Articles</h1><div class="post-list">{posts.map(post=><a class="post-preview" href={'/articles/'+post.slug+'/'}><span class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span><h2>{post.data.title}</h2><p>{post.data.description || 'Read the full article.'}</p><span class="read-more">Read article →</span></a>)}</div></BaseLayout>
