@@ -3,5 +3,5 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://unlearnedinvestor.com',
   base: '/',
-  integrations: [sitemap({ filter: page => !new URL(page).pathname.startsWith('/unlisted/') })]
+  integrations: [sitemap({ filter: page => !new URL(page).pathname.startsWith('/blank/') })]
 });
