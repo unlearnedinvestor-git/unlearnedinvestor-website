@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
-import { postImage } from '../../utils/postImages.js';
 export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft && Boolean(data.sourceUrl));return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
 const {post}=Astro.props;
 const {Content}=await render(post);
 ---
-<BaseLayout title={post.data.title} description={post.data.description || post.data.title} canonical={post.data.sourceUrl}><article class="article"><div class="eyebrow"><a href="/substack-posts/">Substack Posts</a></div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p>{post.data.coverImage && <img src={post.data.coverImage} alt={post.data.title} style="width:100%;height:auto;max-height:480px;object-fit:cover;border-radius:10px;margin:12px 0 24px"/>}<div class="prose"><Content /></div><a class="source-link" href={post.data.sourceUrl} target="_blank" rel="noopener noreferrer">✦ To read my article in Substack click here ↗</a><p><a href="/substack-posts/">← Back to Substack Posts</a></p></article></BaseLayout>
+<BaseLayout title={post.data.title} description={post.data.description || post.data.title} canonical={post.data.sourceUrl}><article class="article"><div class="eyebrow"><a href="/substack-posts/">Substack Posts</a></div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><div class="prose"><Content /></div><a class="source-link" href={post.data.sourceUrl} target="_blank" rel="noopener noreferrer">✦ To read my article in Substack click here ↗</a><p><a href="/substack-posts/">← Back to Substack Posts</a></p></article></BaseLayout>
