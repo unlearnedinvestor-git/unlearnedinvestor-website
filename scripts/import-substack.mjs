@@ -28,7 +28,7 @@ let feed;try{feed=await parser.parseURL(url)}catch(e){console.warn('Substack fee
 let count=0;
 for(const item of feed.items||[]){if(!item.title||!item.link)continue;const date=new Date(item.isoDate||item.pubDate||Date.now());if(Number.isNaN(+date))continue;const name=date.toISOString().slice(0,10)+'-'+slugify(item.title)+'.md';const target=path.join(out,name);try{await fs.access(target);continue}catch{}
 const body=clean(item['content:encoded']||item.content||item.contentSnippet||'');const desc=String(item.contentSnippet||item.summary||'').replace(/\s+/g,' ').slice(0,240);
-const coverImage=await coverFor(item.link);const front=['---','coverImage: '+JSON.stringify(coverImage),'title: '+JSON.stringify(item.title),'description: '+JSON.stringify(desc),'pubDate: '+date.toISOString(),'sourceUrl: '+JSON.stringify(item.link),'category: Investing','draft: false','---',''].join('\n');
+const coverImage=item.enclosure?.url || item['media:content']?.url || await coverFor(item.link);const front=['---','coverImage: '+JSON.stringify(coverImage),'title: '+JSON.stringify(item.title),'description: '+JSON.stringify(desc),'pubDate: '+date.toISOString(),'sourceUrl: '+JSON.stringify(item.link),'category: Investing','draft: false','---',''].join('\n');
 await fs.writeFile(target,front+'\n'+body+'\n');count++}
 console.log('Imported '+count+' new posts');
 
