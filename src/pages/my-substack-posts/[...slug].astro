@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft && Boolean(data.sourceUrl));return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
@@ -7,12 +8,12 @@ const {Content}=await render(post);
 ---
 <BaseLayout title={post.data.title} description={post.data.description || post.data.title} canonical={post.data.sourceUrl}>
   <article class="article">
-    <div class="eyebrow"><a href="/my-substack-posts/">My Substack Posts</a></div>
+    <div class="eyebrow"><a href={`${base}/my-substack-posts/`}>My Substack Posts</a></div>
     <h1>{post.data.title}</h1>
     <p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p>
     <div class="prose"><Content /></div>
     <hr style="margin:40px 0;border:0;border-top:1px solid #e8e4d9"/>
-    <p><a href="/my-substack-posts/">← Back to My Substack Posts</a></p>
+    <p><a href={`${base}/my-substack-posts/`}>← Back to My Substack Posts</a></p>
     {post.data.sourceUrl && <p class="muted">Originally published on <a href={post.data.sourceUrl}>Substack</a>.</p>}
   </article>
 </BaseLayout>
