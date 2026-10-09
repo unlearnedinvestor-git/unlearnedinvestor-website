@@ -5,5 +5,5 @@ for (const [path, markdown] of Object.entries(sources)) {
   if (match) images.set(path.split('/').pop().replace(/\.md$/, ''), match[1].replace(/&amp;/g, '&'));
 }
 export function postImage(post) {
-  return images.get(post.id) || images.get(post.slug) || null;
+  return post.data.coverImage || images.get(post.id) || images.get(post.slug) || null;
 }
