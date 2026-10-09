@@ -1,4 +1,5 @@
 ---
+const siteBase = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft && !data.sourceUrl);return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
@@ -6,5 +7,5 @@ const {post}=Astro.props;
 const {Content}=await render(post);
 ---
 <BaseLayout title={post.data.title} description={post.data.description || post.data.title}>
-  <article class="article"><div class="eyebrow">Original article</div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><div class="prose"><Content /></div><p><a href={import.meta.env.BASE_URL + 'articles/'}>← Back to Articles</a></p></article>
+  <article class="article"><div class="eyebrow">Original article</div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><div class="prose"><Content /></div><p><a href={siteBase + 'articles/'}>← Back to Articles</a></p></article>
 </BaseLayout>
