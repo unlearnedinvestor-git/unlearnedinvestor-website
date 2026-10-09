@@ -1,5 +1,5 @@
 ---
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const base = '/unlearnedinvestor-website';
 const siteBase = base + '/';
 const { title = 'The Unlearned Investor', description = 'Clear thinking for curious investors.', canonical } = Astro.props;
 const url = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
