@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
-export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft);return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
+export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft && !data.sourceUrl);return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
 const {post}=Astro.props;
 const {Content}=await render(post);
 ---
-<BaseLayout title={post.data.title} description={post.data.description || post.data.title} canonical={post.data.sourceUrl}><article class="article"><div class="eyebrow">{post.data.category}</div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><div class="prose"><Content /></div><hr style="margin:40px 0;border:0;border-top:1px solid #e8e4d9"/><p>Enjoyed this article? <a href="https://unlearnedinvestor.substack.com/">Subscribe on Substack</a>.</p>{post.data.sourceUrl && <p class="muted">Originally published on <a href={post.data.sourceUrl}>Substack</a>.</p>}</article></BaseLayout>
+<BaseLayout title={post.data.title} description={post.data.description || post.data.title}>
+  <article class="article"><div class="eyebrow">Original article</div><h1>{post.data.title}</h1><p class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><div class="prose"><Content /></div><p><a href="/articles/">← Back to Articles</a></p></article>
+</BaseLayout>

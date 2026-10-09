@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const posts=(await getCollection('posts',({data})=>!data.draft && Boolean(data.sourceUrl))).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+---
+<BaseLayout title="My Substack Posts" description="The Unlearned Investor's archive of posts originally published on Substack.">
+  <div class="eyebrow">The Substack archive</div>
+  <h1>My Substack Posts</h1>
+  <p class="lead">All my writing originally published on Substack, collected in one place.</p>
+  <p class="muted">{posts.length} posts</p>
+  {posts.length ? <div class="cards">{posts.map(post=><a class="card" href={'/my-substack-posts/'+post.slug+'/'}><div class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div><h3>{post.data.title}</h3><p>{post.data.description}</p></a>)}</div> : <p>Substack posts will appear here when imported.</p>}
+</BaseLayout>

@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-const posts=(await getCollection('posts',({data})=>!data.draft)).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+const posts=(await getCollection('posts',({data})=>!data.draft && !data.sourceUrl)).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 ---
-<BaseLayout title="Articles" description="Investing articles from The Unlearned Investor."><div class="eyebrow">Read and reflect</div><h1>Articles</h1><p class="lead">Ideas worth examining, without the hype.</p>{posts.length ? <div class="cards">{posts.map(post=><a class="card" href={'/articles/'+post.slug+'/'}><div class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div><h3>{post.data.title}</h3><p>{post.data.description}</p></a>)}</div>:<p>Articles will appear here as they are imported from <a href="https://unlearnedinvestor.substack.com/">Substack</a>.</p>}</BaseLayout>
+<BaseLayout title="Articles" description="Original articles published on The Unlearned Investor website.">
+  <div class="eyebrow">Website originals</div><h1>Articles</h1>
+  <p class="lead">Original writing published directly on this website.</p>
+  {posts.length ? <div class="cards">{posts.map(post=><a class="card" href={'/articles/'+post.slug+'/'}><div class="muted">{post.data.pubDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div><h3>{post.data.title}</h3><p>{post.data.description}</p></a>)}</div> : <p>Original website articles will appear here. In the meantime, explore <a href="/my-substack-posts/">My Substack Posts</a>.</p>}
+</BaseLayout>
