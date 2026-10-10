@@ -26,7 +26,7 @@ try {
     const response = await fetch('https://itunes.apple.com/lookup?id=1896076507&entity=podcastEpisode&limit=200', {signal:AbortSignal.timeout(20000)});
     if (!response.ok) throw new Error('Apple Podcasts lookup returned ' + response.status);
     const data = await response.json();
-    const episodes = (data.results || []).filter(item => item.wrapperType === 'podcastEpisode' && /^https:\\/\\//.test(item.episodeUrl || '')).map(item => ({
+    const episodes = (data.results || []).filter(item => item.wrapperType === 'podcastEpisode' && String(item.episodeUrl || '').startsWith('https://')).map(item => ({
       title: item.trackName || item.collectionName || 'Podcast episode',
       description: clean(item.description || item.shortDescription || '').slice(0,550),
       published: item.releaseDate || '',
@@ -43,7 +43,7 @@ try {
     try { await fs.access(target); }
     catch {
       await fs.mkdir(path.dirname(target), { recursive: true });
-      await fs.writeFile(target, '[]\\n');
+      await fs.writeFile(target, '[]\n');
     }
   }
 }
