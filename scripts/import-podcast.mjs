@@ -22,10 +22,28 @@ try {
   console.log('Imported ' + episodes.length + ' podcast episodes');
 } catch (err) {
   console.warn('Podcast feed unavailable; retaining previously imported episodes:', err.message);
-  try { await fs.access(target); }
-  catch {
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.writeFile(target, '[]\n');
-    console.warn('No cached episodes yet. Deploying empty podcast page until RSS is accessible.');
+  try {
+    const response = await fetch('https://itunes.apple.com/lookup?id=1896076507&entity=podcastEpisode&limit=200', {signal:AbortSignal.timeout(20000)});
+    if (!response.ok) throw new Error('Apple Podcasts lookup returned ' + response.status);
+    const data = await response.json();
+    const episodes = (data.results || []).filter(item => item.wrapperType === 'podcastEpisode' && /^https:\\/\\//.test(item.episodeUrl || '')).map(item => ({
+      title: item.trackName || item.collectionName || 'Podcast episode',
+      description: clean(item.description || item.shortDescription || '').slice(0,550),
+      published: item.releaseDate || '',
+      audio: item.episodeUrl,
+      source: item.trackViewUrl || '',
+      duration: item.trackTimeMillis ? Math.round(item.trackTimeMillis/60000) + ' min' : ''
+    }));
+    if (!episodes.length) throw new Error('No playable episodes in Apple Podcasts response');
+    await fs.mkdir(path.dirname(target), {recursive:true});
+    await fs.writeFile(target, JSON.stringify(episodes, null, 2) + '\\n');
+    console.log('Imported ' + episodes.length + ' episodes from Apple Podcasts fallback');
+  } catch (fallbackError) {
+    console.warn('Apple Podcasts fallback unavailable:', fallbackError.message);
+    try { await fs.access(target); }
+    catch {
+      await fs.mkdir(path.dirname(target), { recursive: true });
+      await fs.writeFile(target, '[]\\n');
+    }
   }
 }
