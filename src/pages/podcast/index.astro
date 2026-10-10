@@ -5,6 +5,7 @@ import path from 'node:path';
 const podcastFile = path.resolve('src/data/podcast.json');
 const episodes = fs.existsSync(podcastFile) ? JSON.parse(fs.readFileSync(podcastFile, 'utf8')) : [];
 const platforms = [
+  { label: 'Spotify', href: 'https://open.spotify.com/episode/4B9z6OyeTFHSnM6iJOoenR' },
   { label: 'Apple Podcasts', href: 'https://podcasts.apple.com/us/podcast/the-unlearned-investor-podcast/id1896076507' },
   { label: 'YouTube Music', href: 'https://music.youtube.com/channel/UCCn1GGRzEZ5U43A13axcLfg' },
   { label: 'YouTube Podcasts', href: 'https://www.youtube.com/playlist?list=PLSCNdhZdv2_fA0Q5FGgEcBW95k6pUyKcc' },
@@ -19,7 +20,7 @@ const platforms = [
       {platforms.map(platform => <a href={platform.href} target="_blank" rel="noopener noreferrer">{platform.label} ↗</a>)}
     </div>
   </section>
-  <div class="episode-count">{episodes.length} episodes</div>
+  <div class="episode-count">{episodes.length ? episodes.length + ' episodes' : 'Episodes are temporarily unavailable while we restore the podcast feed.'}</div>
   <section class="episodes" aria-label="Podcast episodes">
     {episodes.map((episode, index) => <article class="episode">
       <div class="episode-top"><span class="eyebrow">Episode {episodes.length - index}</span>{episode.published && <time datetime={episode.published}>{new Date(episode.published).toLocaleDateString('en-GB', { day:'numeric',month:'long',year:'numeric' })}</time>}</div>
@@ -28,8 +29,8 @@ const platforms = [
       <audio controls preload="none" src={episode.audio} aria-label={'Listen to ' + episode.title}>Your browser does not support audio playback. <a href={episode.audio}>Open the audio file.</a></audio>
       <div class="episode-links">
         {episode.source && <a href={episode.source} target="_blank" rel="noopener noreferrer">Read on Substack ↗</a>}
-        <a href={platforms[0].href} target="_blank" rel="noopener noreferrer">Apple Podcasts ↗</a>
-        <a href={platforms[1].href} target="_blank" rel="noopener noreferrer">YouTube Music ↗</a>
+        <a href={platforms[0].href} target="_blank" rel="noopener noreferrer">Spotify ↗</a><a href={platforms[1].href} target="_blank" rel="noopener noreferrer">Apple Podcasts ↗</a>
+        <a href={platforms[2].href} target="_blank" rel="noopener noreferrer">YouTube Music ↗</a>
       </div>
     </article>)}
   </section>
