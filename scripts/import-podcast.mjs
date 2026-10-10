@@ -36,7 +36,7 @@ try {
     }));
     if (!episodes.length) throw new Error('No playable episodes in Apple Podcasts response');
     await fs.mkdir(path.dirname(target), {recursive:true});
-    await fs.writeFile(target, JSON.stringify(episodes, null, 2) + '\\n');
+    await fs.writeFile(target, JSON.stringify(episodes, null, 2) + '\n');
     console.log('Imported ' + episodes.length + ' episodes from Apple Podcasts fallback');
   } catch (fallbackError) {
     console.warn('Apple Podcasts fallback unavailable:', fallbackError.message);
