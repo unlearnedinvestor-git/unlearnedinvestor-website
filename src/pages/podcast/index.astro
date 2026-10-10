@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import fs from 'node:fs';
-const episodes = JSON.parse(fs.readFileSync(new URL('../../data/podcast.json', import.meta.url), 'utf8'));
+import path from 'node:path';
+const podcastFile = path.resolve('src/data/podcast.json');
+const episodes = fs.existsSync(podcastFile) ? JSON.parse(fs.readFileSync(podcastFile, 'utf8')) : [];
 const platforms = [
   { label: 'Apple Podcasts', href: 'https://podcasts.apple.com/us/podcast/the-unlearned-investor-podcast/id1896076507' },
   { label: 'YouTube Music', href: 'https://music.youtube.com/channel/UCCn1GGRzEZ5U43A13axcLfg' },
