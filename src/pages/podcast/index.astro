@@ -1,4 +1,37 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'node:fs';
+const episodes = JSON.parse(fs.readFileSync(new URL('../../data/podcast.json', import.meta.url), 'utf8'));
+const platforms = [
+  { label: 'Apple Podcasts', href: 'https://podcasts.apple.com/us/podcast/the-unlearned-investor-podcast/id1896076507' },
+  { label: 'YouTube Music', href: 'https://music.youtube.com/channel/UCCn1GGRzEZ5U43A13axcLfg' },
+  { label: 'YouTube Podcasts', href: 'https://www.youtube.com/playlist?list=PLSCNdhZdv2_fA0Q5FGgEcBW95k6pUyKcc' },
+];
 ---
-<BaseLayout title="Podcast" description="The Unlearned Investor podcast."><h1>Podcast</h1><p>Podcast episodes and updates will appear here.</p></BaseLayout>
+<BaseLayout title="Podcast" description="Listen to The Unlearned Investor podcast right here, or follow it on Apple Podcasts and YouTube Music.">
+  <section class="podcast-header">
+    <span class="eyebrow">The Unlearned Investor</span>
+    <h1>Listen to the Podcast</h1>
+    <p class="lead">Thoughtful conversations and practical lessons on investing, money and long-term wealth. Listen to any episode here, without leaving the website.</p>
+    <div class="platforms" aria-label="Follow the podcast">
+      {platforms.map(platform => <a href={platform.href} target="_blank" rel="noopener noreferrer">{platform.label} ↗</a>)}
+    </div>
+  </section>
+  <div class="episode-count">{episodes.length} episodes</div>
+  <section class="episodes" aria-label="Podcast episodes">
+    {episodes.map((episode, index) => <article class="episode">
+      <div class="episode-top"><span class="eyebrow">Episode {episodes.length - index}</span>{episode.published && <time datetime={episode.published}>{new Date(episode.published).toLocaleDateString('en-GB', { day:'numeric',month:'long',year:'numeric' })}</time>}</div>
+      <h2>{episode.title}</h2>
+      {episode.description && <p>{episode.description}</p>}
+      <audio controls preload="none" src={episode.audio} aria-label={'Listen to ' + episode.title}>Your browser does not support audio playback. <a href={episode.audio}>Open the audio file.</a></audio>
+      <div class="episode-links">
+        {episode.source && <a href={episode.source} target="_blank" rel="noopener noreferrer">Read on Substack ↗</a>}
+        <a href={platforms[0].href} target="_blank" rel="noopener noreferrer">Apple Podcasts ↗</a>
+        <a href={platforms[1].href} target="_blank" rel="noopener noreferrer">YouTube Music ↗</a>
+      </div>
+    </article>)}
+  </section>
+  <style>
+    .podcast-header{max-width:800px;margin:0 auto 46px;text-align:center}.podcast-header h1{margin:13px 0 18px}.lead{margin:0 auto 24px}.platforms{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.platforms a{padding:12px 17px;background:#0b544e;color:#fff;border-radius:6px;font-size:.92rem;font-weight:700}.platforms a:hover{background:#073f3a;text-decoration:none}.episode-count{font-weight:700;color:#657578;margin-bottom:16px}.episodes{display:grid;gap:18px}.episode{background:#fff;border:1px solid #e4e9e7;border-radius:12px;padding:25px 28px;box-shadow:0 4px 16px #102a2a08}.episode-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.episode time{color:#778385;font-size:.85rem}.episode h2{font:700 clamp(1.3rem,2.5vw,1.7rem)/1.3 Arial,sans-serif;margin:12px 0}.episode p{margin:0 0 17px;line-height:1.65}.episode audio{width:100%;display:block;margin:15px 0}.episode-links{display:flex;flex-wrap:wrap;gap:12px 20px;font-size:.9rem;font-weight:700}@media(max-width:600px){.episode{padding:20px}.episode-top{align-items:flex-start}}
+  </style>
+</BaseLayout>
