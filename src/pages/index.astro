@@ -2,7 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { isPodcastPost } from '../utils/podcastPosts.js';
-const posts=(await getCollection('posts',(post)=>!post.data.draft && !isPodcastPost(post))).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+import { hasWrittenArticle } from '../utils/writtenArticle.js';
+const posts=(await getCollection('posts',(post)=>!post.data.draft && (!isPodcastPost(post) || hasWrittenArticle(post.body)))).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 ---
 <BaseLayout title="The Unlearned Investor" description="Unlearn conventional money advice and learn to think like an investor. Explore investing fundamentals, personal finance and independent market analysis.">
 <section class="hero"><img class="hero-photo" src="/hero.png" alt="An investing workspace with finance books, market charts, a coffee mug and notebook" width="1536" height="1024" fetchpriority="high" /><div class="hero-inner"><h1>THE UNLEARNED<br/>INVESTOR</h1><p>How to unlearn the concepts of money taught to us by others and start thinking about money like a true investor.</p><a class="hero-button" href="#latest-posts">Explore Articles <span aria-hidden="true">→</span></a></div></section>
