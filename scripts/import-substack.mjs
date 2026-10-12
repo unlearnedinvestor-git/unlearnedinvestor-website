@@ -1,6 +1,7 @@
 import Parser from 'rss-parser';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { hasWrittenArticle } from '../src/utils/writtenArticle.js';
 
 const feedUrl = process.env.SUBSTACK_FEED_URL || 'https://unlearnedinvestor.substack.com/feed';
 const out = path.resolve('src/content/posts');
@@ -62,7 +63,10 @@ if (feed) {
   for (const item of feed.items || []) {
     if (!item.title || !item.link) continue;
     const isPodcast = Boolean(item.enclosure?.type?.startsWith('audio/') || /\\.(mp3|m4a|aac|ogg)(?:\\?|$)/i.test(item.enclosure?.url || '') || podcastTitles.has(normalize(item.title)));
-    if (isPodcast) continue;
+    // Podcast posts with substantive written articles belong in both sections.
+    // Short audio-only descriptions stay in the podcast section.
+    const writtenBody = item.encodedContent || item.content || '';
+    if (isPodcast && !hasWrittenArticle(writtenBody)) continue;
     const date = new Date(item.isoDate || item.pubDate || Date.now());
     if (Number.isNaN(+date)) continue;
     const filename = date.toISOString().slice(0, 10) + '-' + slugify(item.title) + '.md';
@@ -71,7 +75,7 @@ if (feed) {
     const body = clean(item.encodedContent || item.content || item.contentSnippet || '');
     const description = String(item.contentSnippet || item.summary || '').replace(/\s+/g, ' ').slice(0, 240);
     const coverImage = rssCover(item) || await pageCover(item.link);
-    const front = ['---', 'title: ' + JSON.stringify(item.title), 'description: ' + JSON.stringify(description), 'pubDate: ' + date.toISOString(), 'sourceUrl: ' + JSON.stringify(item.link), 'coverImage: ' + JSON.stringify(coverImage), 'category: Investing', 'draft: false', '---', ''].join('\n');
+    const front = ['---', 'title: ' + JSON.stringify(item.title), 'description: ' + JSON.stringify(description), 'pubDate: ' + date.toISOString(), 'sourceUrl: ' + JSON.stringify(item.link), 'coverImage: ' + JSON.stringify(coverImage), 'category: Investing', 'podcast: ' + isPodcast, 'draft: false', '---', ''].join('\n');
     await fs.writeFile(target, front + '\n' + body + '\n');
     imported++;
   }
