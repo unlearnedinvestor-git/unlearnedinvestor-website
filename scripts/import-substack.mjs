@@ -4,6 +4,10 @@ import path from 'node:path';
 
 const feedUrl = process.env.SUBSTACK_FEED_URL || 'https://unlearnedinvestor.substack.com/feed';
 const out = path.resolve('src/content/posts');
+const podcastData = path.resolve('src/data/podcast.json');
+const normalize = value => String(value || '').toLowerCase().replace(/&amp;/g, '&').replace(/[^a-z0-9]+/g, ' ').trim();
+let podcastTitles = new Set();
+try { podcastTitles = new Set(JSON.parse(await fs.readFile(podcastData, 'utf8')).map(ep => normalize(ep.title))); } catch {}
 const parser = new Parser({
   customFields: { item: [
     ['content:encoded', 'encodedContent'],
@@ -57,6 +61,8 @@ if (feed) {
   let imported = 0, recovered = 0, missing = 0;
   for (const item of feed.items || []) {
     if (!item.title || !item.link) continue;
+    const isPodcast = Boolean(item.enclosure?.type?.startsWith('audio/') || /\\.(mp3|m4a|aac|ogg)(?:\\?|$)/i.test(item.enclosure?.url || '') || podcastTitles.has(normalize(item.title)));
+    if (isPodcast) continue;
     const date = new Date(item.isoDate || item.pubDate || Date.now());
     if (Number.isNaN(+date)) continue;
     const filename = date.toISOString().slice(0, 10) + '-' + slugify(item.title) + '.md';
