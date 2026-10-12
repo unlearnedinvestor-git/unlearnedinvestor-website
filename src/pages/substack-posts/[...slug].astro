@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
-export async function getStaticPaths(){const posts=await getCollection('posts',({data})=>!data.draft && Boolean(data.sourceUrl));return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
+import { isPodcastPost } from '../../utils/podcastPosts.js';
+export async function getStaticPaths(){const posts=await getCollection('posts',(post)=>!post.data.draft && Boolean(post.data.sourceUrl) && !isPodcastPost(post));return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
 const {post}=Astro.props;
 const {Content}=await render(post);
 ---
