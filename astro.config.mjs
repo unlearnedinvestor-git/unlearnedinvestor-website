@@ -7,6 +7,9 @@ function imageAltAttributes() {
   return (tree) => {
     const visit = (node) => {
       if (!node || typeof node !== 'object') return;
+      if (node.type === 'html' && typeof node.value === 'string') {
+        node.value = node.value.replace(/<img\b[^>]*>/gi, tag => /\s+alt\s*=/i.test(tag) ? tag : tag.replace(/\s*\/?>(?=$)/, end => ` alt=""${end}`));
+      }
       if (node.type === 'element' && node.tagName === 'img') {
         node.properties ||= {};
         if (node.properties.alt == null) node.properties.alt = '';
