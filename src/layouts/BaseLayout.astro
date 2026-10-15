@@ -1,6 +1,9 @@
 ---
 const { title = 'The Unlearned Investor', description = 'Independent investing lessons, thoughtful research and the latest from The Unlearned Investor.', canonical } = Astro.props;
 const url = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const seoTitleOverrides = [{"match":"2026-05-16-fundamentals-of-investing-episode-8","title":"Retirement Planning: An Honest Guide | Unlearned Investor"},{"match":"is-cash-in-bank-an-emergency-fund","title":"Is Cash an Emergency Fund? Cash vs Gold"},{"match":"2026-05-10-fundamentals-of-investing-episode-5","title":"Stocks Explained for Beginners | Unlearned Investor"},{"match":"2026-05-06-fundamentals-of-investing-episode-3","title":"Assets and Liabilities Explained | Unlearned Investor"},{"match":"2026-05-15-fundamentals-of-investing-episode-7","title":"Stock Market Investment Products Explained"},{"match":"2026-05-24-investing-with-the-signal","title":"War in the Gulf: Investing Amid Uncertainty"},{"match":"2026-05-08-fundamentals-of-investing-episode-4","title":"How to Invest in Assets | Unlearned Investor"},{"match":"2026-05-04-fundamentals-of-investing-episode-2","title":"Inflation and Central Banks Explained"},{"match":"2026-05-23-investing-with-the-signal","title":"Signal vs Noise: Investing Series Introduction"},{"match":"2026-05-18-fundamentals-of-investing-episode-9","title":"Wall Street Terms Explained for Beginners"},{"match":"2026-05-12-fundamentals-of-investing-episode-6","title":"How to Analyse a Company Before Investing"},{"match":"2026-05-28-investing-with-the-signal","title":"SpaceX IPO: What Investors Should Know"},{"match":"2026-05-26-investing-with-the-signal","title":"Buying Gold in India: Rethinking the Strategy"},{"match":"2026-05-02-fundamentals-of-investing-episode-1","title":"What Is Money? Investing Fundamentals"}];
+const seoTitle = seoTitleOverrides.find(item => Astro.url.pathname.includes(item.match))?.title;
+const documentTitle = seoTitle || (title === 'The Unlearned Investor' ? title : title + ' | The Unlearned Investor');
 const logo = 'https://substack-post-media.s3.amazonaws.com/public/images/95f8cb92-384e-4497-a4f4-53a238823a5d_1400x1400.png';
 ---
 <!doctype html>
@@ -9,7 +12,7 @@ const logo = 'https://substack-post-media.s3.amazonaws.com/public/images/95f8cb9
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="description" content={description}/><link rel="canonical" href={url}/>
 <link rel="icon" type="image/png" href={logo}/><link rel="apple-touch-icon" href={logo}/>
-<title>{title === 'The Unlearned Investor' ? title : title + ' | The Unlearned Investor'}</title>
+<title>{documentTitle}</title>
 <style is:global>
 :root{font-family:Arial,Helvetica,sans-serif;color:#10242b;background:#f8faf9}*{box-sizing:border-box}body{margin:0}a{color:#145e66;text-decoration:none}a:hover{text-decoration:underline}
 header{background:#fff;border-bottom:1px solid #e6e3dc}.masthead{padding:30px 20px 22px;text-align:center}.masthead img{display:block;margin:0 auto 13px;width:88px;height:88px;object-fit:contain;border-radius:50%}.brand{font-family:Georgia,serif;font-weight:700;font-size:clamp(1.65rem,4vw,2.6rem);letter-spacing:-.025em;color:#202b2c}
